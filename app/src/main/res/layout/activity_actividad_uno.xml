@@ -9,23 +9,27 @@
         android:id="@+id/entradaNumero"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Introduce un número"
+        android:hint="Número de posts (vacío = todos)"
         android:inputType="number" />
 
     <Button
         android:id="@+id/botonBuscar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Buscar 100 posts" />
+        android:text="Buscar" />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recicladorPosts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false" />
-    </ScrollView>
+
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>

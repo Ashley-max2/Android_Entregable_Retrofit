@@ -28,24 +28,23 @@ class ActividadUno : AppCompatActivity() {
         recicladorPosts.layoutManager = LinearLayoutManager(this)
 
         botonBuscar.setOnClickListener {
-            val texto = entradaNumero.text.toString()
-            if (texto.isNotEmpty()) {
-                ClienteRetrofit.instancia.obtenerPosts().enqueue(object : Callback<List<ModeloPost>> {
-                    override fun onResponse(llamada: Call<List<ModeloPost>>, respuesta: Response<List<ModeloPost>>) {
-                        if (respuesta.isSuccessful) {
-                            val cuerpo = respuesta.body()
-                            if (cuerpo != null) {
-                                val adaptador = AdaptadorPost(cuerpo)
-                                recicladorPosts.adapter = adaptador
-                            }
-                        }
-                    }
+            val texto = entradaNumero.text.toString().trim()
+            val cantidad = texto.toIntOrNull()
 
-                    override fun onFailure(llamada: Call<List<ModeloPost>>, error: Throwable) {
-                        Toast.makeText(this@ActividadUno, "Error", Toast.LENGTH_SHORT).show()
+            ClienteRetrofit.instancia.obtenerPosts().enqueue(object : Callback<List<ModeloPost>> {
+                override fun onResponse(llamada: Call<List<ModeloPost>>, respuesta: Response<List<ModeloPost>>) {
+                    if (respuesta.isSuccessful && respuesta.body() != null) {
+                        val todos = respuesta.body()!!
+                        val mostrar = if (cantidad != null && cantidad > 0) todos.take(cantidad) else todos
+                        recicladorPosts.adapter = AdaptadorPost(mostrar)
+                    } else {
+                        Toast.makeText(this@ActividadUno, "Error al obtener posts", Toast.LENGTH_SHORT).show()
                     }
-                })
-            }
+                }
+                override fun onFailure(llamada: Call<List<ModeloPost>>, error: Throwable) {
+                    Toast.makeText(this@ActividadUno, "Error de conexión", Toast.LENGTH_SHORT).show()
+                }
+            })
         }
     }
 }
